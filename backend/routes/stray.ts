@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../database";
+import upload from "../utilities/uploader";
 
 const router = express.Router();
 
@@ -18,10 +19,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
-  res.json({});
+router.post("/", upload.single("photo"), async (req, res) => {
+  const { status } = req.body;
+  res.json({
+    photoUrl: `${req.protocol}://${req.header("host")}/uploads/${
+      req.file?.filename
+    }`,
+    stauts: status,
+  });
 });
 
 export default router;
