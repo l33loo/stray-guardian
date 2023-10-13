@@ -1,16 +1,14 @@
 import { Sequelize } from "sequelize";
-import createAnimal from "./models/animal";
+import createStrayRequest from "./models/strayRequest";
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "db.sqlite",
 });
 
-const animal = createAnimal(sequelize);
-
 const db = {
   sequelize,
-  Animal: animal,
+  StrayRequest: createStrayRequest(sequelize),
 };
 
 (async () => {

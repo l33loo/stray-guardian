@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import animalRoutes from "./routes/animal";
+import strayRoutes from "./routes/stray";
 const app = express();
 dotenv.config();
 
@@ -11,7 +11,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use(bodyParser.json());
 
-app.use("/api/animal", animalRoutes);
+app.use("/api/stray", strayRoutes);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
