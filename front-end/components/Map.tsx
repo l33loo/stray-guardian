@@ -65,6 +65,7 @@ export const Map = React.memo(() => {
             coordinate={marker.coordinate}
             title={marker.listingType}
             description={`${marker.animalType}, ${marker.color}`}
+            pinColor={marker.listingType === 'found' ? 'blue' : 'red'}
           />
         ))}
       </MapView>
