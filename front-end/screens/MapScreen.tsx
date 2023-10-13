@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
 import { Header } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Map } from "../components/Map"
 
 export default () => {
   const styles = useStyles();
@@ -27,7 +28,7 @@ export default () => {
           rightContainerStyle={{}}
           statusBarProps={{}}
         />
-        <MapView style={styles.map} />
+        <Map />
       </View>
     </SafeAreaProvider>
   );
@@ -45,10 +46,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.colors.background,
     flex: 1,
-  },
-  map: {
-    width: "100%",
-    height: "100%",
   },
   header: {
     height: "30%",
