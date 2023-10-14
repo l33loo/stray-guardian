@@ -1,43 +1,44 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Image, Modal, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Button, Image, Modal, Text, TextInput, View } from 'react-native';
 import { Card, Icon, Tab } from "@rneui/base";
 import ImagePicker from 'expo-image-picker';
 
 export function Form() {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex, setTabIndex] = useState<number>(0);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [observationsField, setObservationsField] = useState<string>('');
     const [emailField, setEmailField] = useState<string>('');
     const [phoneField, setPhoneField] = useState<string>('');
     const [lastSeenDateField, setLastSeenDateField] = useState<string>('');
 
-    // const pickImageAsync = async () => {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         allowsEditing: true,
-    //         quality: 1,
-    //     });
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 1,
+        });
     
-    //     if (!result.canceled) {
-    //         setSelectedImage(result.assets[0].uri);
-    //         setShowAppOptions(true);
-    //     } else {
-    //         alert('You did not select any image.');
-    //     }
-    // };
+        if (!result.canceled) {
+            setSelectedImage(result.assets[0].uri);
+            // setShowAppOptions(true);
+        } else {
+            alert('You did not select any image.');
+        }
+    };
     
-    // const takeImageAsync = async () => {
-    //     let result = await ImagePicker.launchCameraAsync({
-    //         allowsEditing: true,
-    //         quality: 1,
-    //     });
+    const takeImage = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            quality: 1,
+        });
     
-    //     if (!result.canceled) {
-    //         setSelectedImage(result.assets[0].uri);
-    //         setShowAppOptions(true);
-    //     } else {
-    //         alert('You did not select any image.');
-    //     }
-    // };
+        if (!result.canceled) {
+            setSelectedImage(result.assets[0].uri);
+            // setShowAppOptions(true);
+        } else {
+            alert('You did not select any image.');
+        }
+    };
 
     return (
         <Modal
@@ -52,28 +53,28 @@ export function Form() {
                 style={{alignSelf: 'flex-end', marginTop: 15, marginRight: 15}}
             />
             <Card.Title>
-            <Tab
-                value={tabIndex}
-                onChange={(e) => setTabIndex(e)}
-                indicatorStyle={{
-                    backgroundColor: 'white',
-                    height: 3,
-                }}
-                variant="primary"
+                <Tab
+                    value={tabIndex}
+                    onChange={(e) => setTabIndex(e)}
+                    indicatorStyle={{
+                        backgroundColor: 'grey',
+                        height: 3,
+                    }}
+                    variant="default"
                 >
                     <Tab.Item
                         title="Lost"
-                        titleStyle={{ fontSize: 12 }}
-                        icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
                     />
                     <Tab.Item
                         title="Found"
-                        titleStyle={{ fontSize: 12 }}
-                        icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
                     />
                 </Tab>
             </Card.Title>
             <Card.Divider/>
+            <View>
+                <Button title="Pick an image from camera roll" onPress={pickImage} />
+                {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />}
+            </View>
             <View>
                 <View style={{position:"relative", alignItems:"center"}}>
                     {/* <Image
@@ -115,6 +116,11 @@ export function Form() {
                     />
                 </View>
             </View>
+            <Button
+                // onPress={onPressLearnMore}
+                title="Submit"
+                color="#841584"
+            />
         </Modal>
     )
 }
