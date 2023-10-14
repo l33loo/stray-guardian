@@ -9,9 +9,17 @@
   "author": "UAC TEAM",
   "license": "ISC",
   "dependencies": {
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow-models/deeplab": "^0.2.2",
+    "@tensorflow-models/mobilenet": "^2.1.1",
+    "@tensorflow/tfjs": "^4.11.0",
+    "@tensorflow/tfjs-backend-cpu": "^4.11.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.12.0-rc.0",
+    "@tensorflow/tfjs-node": "^4.11.0",
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "multer": "^1.4.5-lts.1",
+    "nvm": "^0.0.4",
     "sequelize": "^6.33.0",
     "sqlite3": "^5.1.6"
   },

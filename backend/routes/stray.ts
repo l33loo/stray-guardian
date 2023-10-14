@@ -1,6 +1,9 @@
 import express from "express";
 import db from "../database";
 import upload from "../utilities/uploader";
+import { Sequelize } from "sequelize";
+import crypto from "crypto";
+import catalog from "../utilities/detection";
 
 const router = express.Router();
 
@@ -28,13 +31,25 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", upload.single("photo"), async (req, res) => {
-  const { status } = req.body;
-  res.json({
-    photoUrl: `${req.protocol}://${req.header("host")}/uploads/${
-      req.file?.filename
-    }`,
-    stauts: status,
-  });
+  const { status, lastSeen, lat, lon, phone, email, observations } = req.body;
+  const photoUrl = `${req.protocol}://${req.header("host")}/uploads/${
+    req.file?.filename
+  }`;
+  const p = await catalog(req.file!.path);
+  const stray = {
+    photoUrl: photoUrl,
+    type: p.class,
+    color: "#000",
+    status: status,
+    lastSeen: new Date(lastSeen),
+    lat: lat,
+    lon: lon,
+    phone: phone,
+    email: email,
+    observations: observations,
+    token: crypto.randomUUID(),
+  };
+  res.json(await db.StrayRequest.create(stray));
 });
 
 export default router;
