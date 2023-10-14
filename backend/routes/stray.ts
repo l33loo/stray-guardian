@@ -4,10 +4,51 @@ import upload from "../utilities/uploader";
 import { Sequelize } from "sequelize";
 import crypto from "crypto";
 import catalog from "../utilities/detection";
-
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  const { status, type, token: t } = req.query;
+  if (t) {
+    const tr = await db.StrayRequest.findOne({
+      where: {
+        token: t,
+      },
+    });
+    if (tr) {
+      const similar = await db.StrayRequest.findAll({
+        where: {
+          type: tr?.toJSON().type,
+        },
+      });
+      res.json(similar);
+      return;
+    } else {
+      res.statusCode = 204;
+      res.send();
+      return;
+    }
+  }
+
+  if (type) {
+    const strayRequests = await db.StrayRequest.findAll({
+      where: {
+        type: type,
+      },
+    });
+    res.json(strayRequests);
+    return;
+  }
+
+  if (status) {
+    const strayRequests = await db.StrayRequest.findAll({
+      where: {
+        status: status,
+      },
+    });
+    res.json(strayRequests);
+    return;
+  }
+
   const strayRequests = await db.StrayRequest.findAll();
   res.json(strayRequests);
 });
