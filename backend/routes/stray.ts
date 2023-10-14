@@ -1,23 +1,26 @@
 import express from "express";
 import db from "../database";
 import upload from "../utilities/uploader";
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import crypto from "crypto";
 import catalog from "../utilities/detection";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { status, type, token: t } = req.query;
-  if (t) {
-    const tr = await db.StrayRequest.findOne({
+  const { status, type, token } = req.query;
+  console.log("Found with token", token);
+  if (token) {
+    const found = await db.StrayRequest.findOne({
       where: {
-        token: t,
+        token: token,
       },
     });
-    if (tr) {
+    if (found) {
+      const data = found?.toJSON();
       const similar = await db.StrayRequest.findAll({
         where: {
-          type: tr?.toJSON().type,
+          type: data.type,
+          color: data.color,
         },
       });
       res.json(similar);
@@ -30,9 +33,16 @@ router.get("/", async (req, res) => {
   }
 
   if (type) {
+    const types = String(type).split(",");
     const strayRequests = await db.StrayRequest.findAll({
       where: {
-        type: type,
+        [Op.or]: [
+          {
+            type: {
+              [Op.or]: types,
+            },
+          },
+        ],
       },
     });
     res.json(strayRequests);
@@ -42,7 +52,9 @@ router.get("/", async (req, res) => {
   if (status) {
     const strayRequests = await db.StrayRequest.findAll({
       where: {
-        status: status,
+        status: {
+          [Op.or]: String(type).split(","),
+        },
       },
     });
     res.json(strayRequests);
