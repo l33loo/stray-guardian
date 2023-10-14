@@ -1,4 +1,3 @@
-import MapView from "react-native-maps";
 import { StyleSheet, View } from "react-native";
 import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
 import { Header } from "@rneui/themed";
