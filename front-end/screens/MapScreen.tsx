@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
 import { Header } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Map } from "../components/Map"
+import { Map } from "../components/Map";
+import { Form } from "../components/Form";
 
 export default () => {
   const styles = useStyles();
@@ -28,6 +30,7 @@ export default () => {
           statusBarProps={{}}
         />
         <Map />
+        <Form />
       </View>
     </SafeAreaProvider>
   );
