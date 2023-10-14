@@ -4,9 +4,21 @@ import { Header } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Map } from "../components/Map";
 import Filters from "../components/Filters";
+import { useState } from "react";
 
 export default () => {
   const styles = useStyles();
+  const [filter, setFilter] = useState({
+    dog: false,
+    cat: false,
+    bird: false,
+    bat: false,
+    cow: false,
+    rabbit: false,
+    unicorn: false,
+    found: false,
+    lost: false,
+  });
 
   return (
     <SafeAreaProvider>
@@ -20,8 +32,8 @@ export default () => {
           placement="center"
           rightComponent={{ icon: "add", color: "#fff" }}
         />
-        <Filters />
-        <Map />
+        <Filters filter={filter} setFilter={setFilter} />
+        <Map filter={filter} />
       </View>
     </SafeAreaProvider>
   );

@@ -6,7 +6,7 @@ import { getPins } from "../queries";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export const Map = React.memo(() => {
+export const Map = React.memo((params: any) => {
   const [loading, setLoading] = useState(true);
   const [pins, setPins] = useState<Array<any>>([]);
   const [modalContent, setModalContent] = useState(null);
@@ -16,12 +16,12 @@ export const Map = React.memo(() => {
     longitude: 0,
     longitudeDelta: 0.0025,
   });
+  const { filter } = params;
 
   useMemo(() => {
     (async () => {
       setLoading(true);
       let location = await Location.getCurrentPositionAsync({});
-      console.log(location);
       setLocation({
         latitude: location.coords.latitude,
         latitudeDelta: 0.0025,
@@ -35,13 +35,13 @@ export const Map = React.memo(() => {
   useEffect(() => {
     const interval = setInterval(() => {
       (async () => {
-        const pins = await getPins();
+        const pins = await getPins(filter);
         setPins(pins);
       })();
-    }, 10000);
+    }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [filter]);
 
   const mapStyle = [
     {
@@ -85,7 +85,7 @@ export const Map = React.memo(() => {
             coordinate={{ latitude: marker.lat, longitude: marker.lon }}
             // title={marker.listingType}
             // description={`${marker.animalType}, ${marker.color}`}
-            pinColor={marker.color === "found" ? "blue" : "red"}
+            pinColor={marker.color}
             onPress={() => setModalContent(pins[index])}
           />
         ))}

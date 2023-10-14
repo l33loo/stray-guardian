@@ -1,13 +1,15 @@
 import express from "express";
 import db from "../database";
 import upload from "../utilities/uploader";
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import crypto from "crypto";
 import catalog from "../utilities/detection";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  console.log(req.query);
   const { status, type, token: t } = req.query;
+
   if (t) {
     const tr = await db.StrayRequest.findOne({
       where: {
@@ -30,9 +32,19 @@ router.get("/", async (req, res) => {
   }
 
   if (type) {
+    const types = String(type).split(",");
     const strayRequests = await db.StrayRequest.findAll({
       where: {
-        type: type,
+        [Op.or]: [
+          {
+            type: {
+              [Op.or]: types,
+            },
+          },
+          {
+            status: types.includes("found") ? 1 : 0,
+          },
+        ],
       },
     });
     res.json(strayRequests);
@@ -42,7 +54,9 @@ router.get("/", async (req, res) => {
   if (status) {
     const strayRequests = await db.StrayRequest.findAll({
       where: {
-        status: status,
+        status: {
+          [Op.or]: String(type).split(","),
+        },
       },
     });
     res.json(strayRequests);
