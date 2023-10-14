@@ -4,9 +4,6 @@ export default (sequelize: Sequelize) => {
     photoUrl: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isUrl: true,
-      },
     },
     type: {
       type: DataTypes.STRING,
@@ -20,7 +17,7 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    date: {
+    lastSeen: {
       type: DataTypes.DATE,
       allowNull: false,
     },
@@ -28,9 +25,13 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.UUID,
       allowNull: true,
     },
-    point: {
-      type: DataTypes.GEOGRAPHY,
-      allowNull: true,
+    lat: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    lon: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     phone: {
       type: DataTypes.STRING,
