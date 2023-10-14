@@ -1,9 +1,9 @@
-import MapView from "react-native-maps";
-import { StyleSheet, View } from "react-native";
-import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
+import { View } from "react-native";
+import { makeStyles } from "@rneui/themed";
 import { Header } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Map } from "../components/Map"
+import { Map } from "../components/Map";
+import Filters from "../components/Filters";
 
 export default () => {
   const styles = useStyles();
@@ -12,22 +12,15 @@ export default () => {
     <SafeAreaProvider>
       <View style={styles.container}>
         <Header
-          backgroundImageStyle={{}}
           barStyle="default"
-          centerComponent={{
-            text: "MY TITLE",
-            style: { color: "#fff" },
-          }}
           centerContainerStyle={{}}
           containerStyle={{ width: "100%" }}
-          leftComponent={{ icon: "menu", color: "#fff" }}
           leftContainerStyle={{}}
           linearGradientProps={{}}
           placement="center"
-          rightComponent={{ icon: "home", color: "#fff" }}
-          rightContainerStyle={{}}
-          statusBarProps={{}}
+          rightComponent={{ icon: "add", color: "#fff" }}
         />
+        <Filters />
         <Map />
       </View>
     </SafeAreaProvider>
