@@ -7,19 +7,20 @@ import catalog from "../utilities/detection";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  console.log(req.query);
-  const { status, type, token: t } = req.query;
-
-  if (t) {
-    const tr = await db.StrayRequest.findOne({
+  const { status, type, token } = req.query;
+  console.log("Found with token", token);
+  if (token) {
+    const found = await db.StrayRequest.findOne({
       where: {
-        token: t,
+        token: token,
       },
     });
-    if (tr) {
+    if (found) {
+      const data = found?.toJSON();
       const similar = await db.StrayRequest.findAll({
         where: {
-          type: tr?.toJSON().type,
+          type: data.type,
+          color: data.color,
         },
       });
       res.json(similar);
@@ -40,9 +41,6 @@ router.get("/", async (req, res) => {
             type: {
               [Op.or]: types,
             },
-          },
-          {
-            status: types.includes("found") ? 1 : 0,
           },
         ],
       },

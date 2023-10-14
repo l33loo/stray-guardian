@@ -16,7 +16,7 @@ export const Map = React.memo((params: any) => {
     longitude: 0,
     longitudeDelta: 0.0025,
   });
-  const { filter } = params;
+  const { filter, token } = params;
 
   useMemo(() => {
     (async () => {
@@ -35,13 +35,13 @@ export const Map = React.memo((params: any) => {
   useEffect(() => {
     const interval = setInterval(() => {
       (async () => {
-        const pins = await getPins(filter);
+        const pins = await getPins(filter, token);
         setPins(pins);
       })();
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [filter]);
+  }, [filter, token]);
 
   const mapStyle = [
     {
