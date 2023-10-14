@@ -8,6 +8,14 @@ router.get("/", async (req, res) => {
   const strayRequests = await db.StrayRequest.findAll();
   res.json(strayRequests);
 });
+
+router.get("/types", async (req, res) => {
+  const types = await db.StrayRequest.findAll({
+    attributes: [[Sequelize.fn("DISTINCT", Sequelize.col("type")), "type"]],
+  });
+  res.json(types);
+});
+
 router.get("/:id", async (req, res) => {
   const stray = await db.StrayRequest.findByPk(req.params.id);
 
