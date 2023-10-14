@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Image, Modal, ScrollView, Text, TextInput, View } from 'react-native';
 import { Card, Icon, Tab } from "@rneui/base";
 import { makeStyles } from "@rneui/themed";
 import * as ImagePicker from 'expo-image-picker';
 import { setPin } from '../queries';
+import * as Location from 'expo-location';
 
 export function Form() {
     const styles = useStyles();
@@ -14,24 +15,36 @@ export function Form() {
     const [observationsField, setObservationsField] = useState<string>('');
     const [emailField, setEmailField] = useState<string>('');
     const [phoneField, setPhoneField] = useState<string>('');
-    const [lastSeenDateField, setLastSeenDateField] = useState<string | null>(null);
+    const [lastSeenDateField, setLastSeenDateField] = useState<string | undefined>(undefined);
+    const [location, setLocation] = useState<any>(null);
 
     const pickImage = async () => {
-        const { granted } = await ImagePicker.requestCameraPermissionsAsync();
+        const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (granted) {
             let result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 quality: 1,
+                // exif: true,
             });
         
             if (!result.canceled) {
                 setSelectedImage(result.assets[0].uri);
-                // setShowAppOptions(true);
             } else {
                 alert('You did not select any image.');
             }
         };
     };
+
+    //     let location = await Location.getCurrentPositionAsync({});
+    //     console.log("LOCATION <3 ");
+    //     console.dir(location);
+    //     setLocation({
+    //     latitude: location.coords.latitude,
+    //     latitudeDelta: 0.0025,
+    //     longitude: location.coords.longitude,
+    //     longitudeDelta: 0.0025,
+    //     });
+    // };
     
     const takeImage = async () => {
         const { granted } = await ImagePicker.requestCameraPermissionsAsync();
@@ -49,6 +62,37 @@ export function Form() {
             }
         }
     };
+
+    useEffect(() => {
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            console.log('Permission to access location was denied');
+            return;
+          }
+    
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+        })();
+    }, []);
+
+    const setPinOnSubmit = async () => {
+        if (!selectedImage) {
+            return;
+        }
+        const response = await fetch(selectedImage);
+        const blob = await response.blob();
+        let body = new FormData();
+        body.append('file', blob);
+        body.append('status', tabIndex as any);
+        body.append('lastSeen', lastSeenDateField as any);
+        body.append('email', emailField)
+        body.append('phone', phoneField as any);
+        body.append('lat', location.latitude);
+        body.append('long', location.longitude);
+
+        const resp = await setPin(body);
+    }
 
     return (
         <Modal
@@ -136,18 +180,7 @@ export function Form() {
                 // const [phoneField, setPhoneField] = useState<string>('');
                 // const [lastSeenDateField, setLastSeenDateField] = useState<string>('');
             
-                    onPress={() => setPin({
-                        photoUrl: selectedImage,
-                        type: tabIndex === 0 ? 'lost' : 'found',
-                        color: "#000",
-                        status: status,
-                        lastSeen: new Date(lastSeenDateField),
-                        lat: lat,
-                        lon: lon,
-                        phone: phone,
-                        email: email,
-                        observations: observations,
-                    })}
+                    onPress={setPinOnSubmit}
                     title="Submit"
                     color="#841584"
                 />
@@ -156,7 +189,7 @@ export function Form() {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     input: {
         height: 40,
         margin: 12,
