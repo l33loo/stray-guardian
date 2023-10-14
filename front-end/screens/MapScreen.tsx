@@ -6,6 +6,11 @@ import { Map } from "../components/Map";
 import Filters from "../components/Filters";
 import { Button } from "@rneui/base";
 import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
+import { Header } from "@rneui/themed";
+import { Map } from "../components/Map";
+import { Form } from "../components/Form";
 
 export default () => {
   const styles = useStyles();
