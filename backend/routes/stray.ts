@@ -4,6 +4,7 @@ import upload from "../utilities/uploader";
 import { Op, Sequelize } from "sequelize";
 import crypto from "crypto";
 import catalog from "../utilities/detection";
+import { generateRandomPoint } from "../utilities/geo";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -89,14 +90,20 @@ router.post("/", upload.single("photo"), async (req, res) => {
     req.file?.filename
   }`;
   const p = await catalog(req.file!.path);
+
+  const randomPoint = generateRandomPoint(
+    { lat: Number(lat), lng: Number(lon) },
+    1000
+  );
+  console.log(randomPoint);
   const stray = {
     photoUrl: photoUrl,
     type: p.class,
-    color: "#000",
+    color: "#000000",
     status: status,
     lastSeen: new Date(lastSeen),
-    lat: lat,
-    lon: lon,
+    lat: randomPoint.lat,
+    lon: randomPoint.lng,
     phone: phone,
     email: email,
     observations: observations,

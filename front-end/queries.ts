@@ -3,7 +3,7 @@ export async function getPins(filter: any, token: string | null) {
     const trueAnimals: string[] = Object.keys(filter).filter(
       (key, i) => filter[key]
     );
-    let url = "http://10.10.11.36:8000/api/stray";
+    let url = "http://192.168.1.82:8000/api/stray";
     if (trueAnimals.length > 0) {
       url += `?type=${trueAnimals.join(",")}`;
     }
@@ -36,7 +36,7 @@ export async function setPin(data: FormData) {
       body: data, // body data type must match "Content-Type" header
     });
     return response.json(); // parses JSON response into native JavaScript objects
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     return null;
   }

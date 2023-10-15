@@ -1,13 +1,10 @@
-import { TextInput, View } from "react-native";
-import { Icon, makeStyles, Dialog, Input } from "@rneui/themed";
-import { Header } from "@rneui/themed";
+import { TextInput } from "react-native";
+import { Icon, Dialog } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Map } from "../components/Map";
 import Filters from "../components/Filters";
-import { Button } from "@rneui/base";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
+import { View } from "react-native";
+import { makeStyles, Button } from "@rneui/themed";
 import { Header } from "@rneui/themed";
 import { Map } from "../components/Map";
 import { Form } from "../components/Form";
@@ -27,10 +24,11 @@ export default () => {
   });
   const [name, setName] = useState("Stray Guardian");
   const [token, setToken] = useState("");
-  const [showDialog, setShowDialog] = useState(false);
+  const [showTokenDialog, setShowTokenDialog] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
   const handleSubmit = () => {
-    setShowDialog(false);
+    setShowTokenDialog(false);
     token === "" ? setName("Stray Guardian") : setName(token);
   };
 
@@ -45,22 +43,31 @@ export default () => {
           leftContainerStyle={{}}
           linearGradientProps={{}}
           placement="center"
-          rightComponent={{ icon: "add", color: "#fff" }}
+          rightComponent={
+            <View style={styles.leftContainer}>
+              <Icon
+                name={"add"}
+                color="#FFFF"
+                onPress={() => setIsFormOpen(true)}
+              />
+            </View>
+          }
           leftComponent={
             <View style={styles.leftContainer}>
               <Icon
                 type={"material-community"}
                 name={"key"}
                 color="#FFFF"
-                onPress={() => setShowDialog(true)}
+                onPress={() => setShowTokenDialog(true)}
               />
             </View>
           }
         />
         <Filters filter={filter} setFilter={setFilter} />
         <Map filter={filter} token={token} />
-        {showDialog && ( // Conditionally render the dialog when showDialog is true
-          <Dialog onBackdropPress={() => setShowDialog(false)}>
+        <Form isFormOpen={isFormOpen} setIsFormOpen={setIsFormOpen} />
+        {showTokenDialog && ( // Conditionally render the dialog when showDialog is true
+          <Dialog onBackdropPress={() => setShowTokenDialog(false)}>
             <View>
               <TextInput
                 style={styles.dialogTextInput}
